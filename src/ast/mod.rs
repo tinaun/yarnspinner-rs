@@ -8,8 +8,8 @@ pub type NodeLabel = intern::InternedKey;
 
 #[derive(Debug, Clone)]
 pub struct Node {
-    header: NodeHeader,
-    lines: Vec<NodeLine>,
+    pub header: NodeHeader,
+    pub lines: Vec<NodeLine>,
 }
 
 impl Node {
@@ -20,15 +20,15 @@ impl Node {
 
 #[derive(Debug, Clone)]
 pub struct NodeHeader {
-    title: NodeLabel,
-    tags: Vec<String>,
-    custom: HashMap<NodeLabel, String>,
+    pub title: NodeLabel,
+    pub tags: Vec<String>,
+    pub custom: HashMap<NodeLabel, String>,
 }
 
 #[derive(Debug, Clone)]
 pub struct NodeLine {
-    label: Option<NodeLabel>,
-    line: String,
+    pub label: Option<NodeLabel>,
+    pub line: String,
 }
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]

@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use std::iter::Peekable;
 use logos::{Logos, Span};
 
@@ -114,6 +116,7 @@ fn header<I: Iterator<Item = (NodeToken, Span)>>(
 
     loop {
         let (tok, x) = next_vis(&mut lex.iter, &mut lex.intern)?;
+        lex.col = x.start as u32;
 
         let header_item = match tok {
             NodeToken::Label => {

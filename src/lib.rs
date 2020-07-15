@@ -23,8 +23,8 @@ impl Context for HashMap<NodeLabel, ast::Value> {
 }
 
 enum Wait {
-    Input,
-    Deadline( std::time::Instant),
+    // Input,
+    // Deadline( std::time::Instant),
     Nothing,
 }
 
@@ -33,11 +33,11 @@ pub struct DialogRunner<C: Context = HashMap<NodeLabel, ast::Value>> {
     
     nodes: HashMap<NodeLabel, ast::Node>,
     functions: HashMap<NodeLabel, (usize, Box<dyn FnMut(&mut C, &[&str])>)>, 
-    ctx: C,
+    _ctx: C,
 
     curr_node: Option<NodeLabel>,
     curr_line: usize,
-    waiting: Wait,
+    _waiting: Wait,
 }
 
 impl DialogRunner {
@@ -47,16 +47,16 @@ impl DialogRunner {
 }
 
 impl<C: Context> DialogRunner<C> {
-    pub fn with_context(ctx: C) -> Self {
+    pub fn with_context(_ctx: C) -> Self {
         DialogRunner {
             string_table: Interner::with_capacity(128),
             nodes: HashMap::new(),
             functions: HashMap::new(),
-            ctx,
+            _ctx,
 
             curr_node: None,
             curr_line: 0,
-            waiting: Wait::Nothing,
+            _waiting: Wait::Nothing,
         }
     }
 
@@ -97,7 +97,19 @@ impl<C: Context> DialogRunner<C> {
     }
 
     pub fn next_event(&mut self) -> Option<Event> {
-        None
+        if let Some(s) = self.curr_node {
+            self.nodes.get(&s).map(|node|{
+                let line = &node.lines[self.curr_line];
+
+                let author = line.label.map(|s| {
+                    self.string_table.lookup(s).to_string()
+                });
+
+                Event::Line(author, line.line.clone())
+            })
+        } else {
+            None
+        }
     }
 }
 
